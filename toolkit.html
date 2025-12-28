@@ -1,0 +1,1934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Usman Toolkit</title>
+<style>
+:root{
+  --bg:#f4f5f7;
+  --white:#ffffff;
+  --border:#e6e6e6;
+  --text:#111;
+  --muted:#8e8e8e;
+  --card:#ffffff;
+  --input:#ffffff;
+  --iconbg:#000;
+  --icontext:#fff;
+  --star-color:#f5c518;
+  --sideview-bg: rgba(255,255,255,0.8);
+  --sideview-blur: 12px;
+  --sideview-border: #f5c518;
+  --floating-bg: #fff;
+  --floating-color: #000;
+}
+
+body.dark{
+  --bg:#0f0f12;
+  --white:#16161a;
+  --border:#2a2a2a;
+  --text:#fff;
+  --muted:#aaa;
+  --card:#1b1b20;
+  --input:#1b1b20;
+  --iconbg:#000;
+  --icontext:#fff;
+  --sideview-bg: rgba(0,0,0,0.7);
+  --sideview-blur: 10px;
+  --sideview-border: #f5c518;
+  --floating-bg: #000;
+  --floating-color: #fff;
+}
+
+*{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;transition:all .25s;}
+body{margin:0;background:var(--bg);color:var(--text);padding-bottom:120px;position:relative;overflow-x:hidden;}
+
+body { animation: fadeInPage 1s ease-out; }
+@keyframes fadeInPage { from { opacity: 0; } to { opacity: 1; } }
+
+.header, .hero {
+  opacity: 0;
+  animation: slideDown 0.8s ease-out forwards;
+}
+.header { animation-delay: 0.3s; }
+.hero { animation-delay: 0.5s; }
+@keyframes slideDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+
+.card {
+  opacity: 0;
+  transform: translateY(40px);
+  animation: cardUp 0.7s ease-out forwards;
+}
+.card:nth-child(1) { animation-delay: 0.2s; }
+.card:nth-child(2) { animation-delay: 0.3s; }
+.card:nth-child(3) { animation-delay: 0.4s; }
+.card:nth-child(4) { animation-delay: 0.5s; }
+@keyframes cardUp { to { opacity: 1; transform: translateY(0); } }
+
+/* Click animation on tools */
+.card:active {
+  animation: toolClick 0.6s ease-out;
+}
+@keyframes toolClick {
+  0% { transform: scale(1); }
+  40% { transform: scale(0.94); }
+  100% { transform: scale(1.06); }
+}
+
+#audioBtn, #msgBtn, #floatingSideviewBtn, #effectsBtn {
+  animation: floatButton 3.5s ease-in-out infinite;
+}
+@keyframes floatButton {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+.filter-btn.active {
+  animation: pulseActive 2s ease-in-out infinite;
+}
+@keyframes pulseActive {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+
+.topbar{background:#000;color:#fff;font-size:13px;padding:8px 12px;text-align:center;}
+.header{background:var(--white);padding:12px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);}
+.logo{font-weight:700;font-size:18px;display:flex;align-items:center;gap:6px;}
+.logo img{width:24px;height:24px;animation:floatButton 3.5s ease-in-out infinite;}
+.header-right{display:flex;align-items:center;gap:10px;}
+.icon-btn{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;user-select:none;transition:all .25s;background:var(--iconbg);color:var(--icontext);border:2px solid transparent;}
+
+.hero{background:var(--white);padding:26px 14px 14px;text-align:center;}
+.hero h1{margin:0;font-size:34px;font-weight:800;}
+.future{background:linear-gradient(270deg,#ff004c,#ff8a00,#ffee00,#00ff85,#00c8ff,#7c5cff,#ff004c);background-size:600% 600%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:rainbow 4s linear infinite;}
+@keyframes rainbow{0%{background-position:0% 0%}50%{background-position:100% 0%}100%{background-position:0% 0%}}
+.hero p{margin:6px 0 14px;font-size:13px;color:var(--muted);}
+
+.stats{display:flex;justify-content:center;gap:10px;}
+.stat{background:var(--card);padding:6px 12px;border-radius:20px;font-size:12px;border:1px solid var(--border);}
+
+.search{padding:14px;position:relative;}
+.search input{width:100%;padding:14px 18px;border-radius:50px;border:1px solid var(--border);background:var(--input);color:var(--text);font-size:15px;outline:none;}
+
+.filter-panel{display:flex;justify-content:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+.filter-btn{padding:8px 16px;border-radius:20px;border:1px solid var(--border);background:var(--card);cursor:pointer;font-weight:600;transition:all .25s;}
+.filter-btn.active{background:var(--star-color);color:#000;border-color:var(--star-color);}
+
+.grid{padding:6px 14px 24px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.card{background:var(--card);border-radius:14px;padding:10px 6px 8px;text-align:center;border:1px solid var(--border);position:relative;cursor:pointer;transition:.2s ease;}
+.card:hover{transform:scale(1.03);box-shadow:0 8px 20px rgba(0,0,0,.12);}
+.star{position:absolute;top:6px;right:6px;font-size:12px;color:#cfcfcf;cursor:pointer;}
+.star.active{color:var(--star-color);}
+.icon{width:40px;height:40px;margin:8px auto 6px;}
+.icon img{width:100%;height:100%;object-fit:contain;}
+.card h3{font-size:12.5px;font-weight:600;margin:2px 0;}
+.card span{font-size:10px;color:var(--muted);}
+
+/* Splash Screen (orbiting logo style) */
+#splashOverlay {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #ffffff, #fffbeb, #fff8d6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 30000;
+  overflow: hidden;
+}
+
+#splashInner {
+  text-align: center;
+  padding: 0 16px;
+}
+
+.logo-container {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  margin: 0 auto 30px;
+  animation: floatRotate 5s ease-in-out infinite;
+}
+
+@keyframes floatRotate {
+  0% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-10px) rotate(5deg); }
+  50% { transform: translateY(0) rotate(0deg); }
+  75% { transform: translateY(10px) rotate(-5deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+.logo-bg {
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, #f5c518, #ffd700);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 50px #f5c518, 0 0 100px #ffd700;
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 50px #f5c518, 0 0 100px #ffd700; }
+  50% { box-shadow: 0 0 70px #f5c518, 0 0 140px #ffd700; }
+}
+
+.logo-bg img {
+  width: 90px;
+  height: 90px;
+  animation: rotateImage 8s linear infinite, bounce 2s ease-in-out infinite;
+}
+
+@keyframes rotateImage {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.ring {
+  position: absolute;
+  border: 2px solid rgba(245,197,24,0.5);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  animation: ringGrow 3s ease-in-out infinite;
+}
+
+.ring.r1 { width: 220px; height: 220px; animation-delay: 0s; }
+.ring.r2 { width: 260px; height: 260px; animation-delay: 1s; }
+.ring.r3 { width: 300px; height: 300px; animation-delay: 2s; }
+
+@keyframes ringGrow {
+  0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+  50% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+  100% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+}
+
+.orbit-dot {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #ffd700;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform-origin: -80px center;
+  animation: orbit 4s linear infinite;
+}
+
+.orbit-dot.d1 { animation-delay: 0s; }
+.orbit-dot.d2 { animation-delay: 1.3s; }
+.orbit-dot.d3 { animation-delay: 2.6s; }
+
+@keyframes orbit {
+  0% { transform: rotate(0deg) translateX(80px) rotate(0deg); }
+  100% { transform: rotate(360deg) translateX(80px) rotate(-360deg); }
+}
+
+.title {
+  font-size: 3.2rem;
+  font-weight: 900;
+  color: #333;
+  text-shadow: 0 0 20px #f5c518, 0 0 40px #ffd700;
+  letter-spacing: 6px;
+  margin-bottom: 10px;
+  animation: fadeInUp 1.5s ease forwards;
+  opacity: 0;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: #555;
+  letter-spacing: 4px;
+  margin-bottom: 30px;
+  font-weight: 600;
+  opacity: 0;
+  animation: fadeInUp 1.8s ease forwards;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.progress-container {
+  width: 80%;
+  max-width: 320px;
+  height: 10px;
+  background: rgba(0,0,0,0.1);
+  border-radius: 50px;
+  overflow: hidden;
+  margin: 20px auto;
+  box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, #f5c518, #ffd700);
+  border-radius: 50px;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.percent {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #f5c518;
+  text-shadow: 0 0 15px #ffd700;
+}
+
+.loading-text {
+  font-size: 1rem;
+  color: #777;
+  margin-top: 10px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+@media (max-width: 480px) {
+  .title { font-size: 2.4rem; letter-spacing: 4px; }
+  .subtitle { font-size: 0.95rem; }
+  .logo-container { width: 160px; height: 160px; }
+  .percent { font-size: 1.6rem; }
+}
+
+
+/* Floating buttons */
+#audioBtn,#msgBtn,#floatingSideviewBtn,#effectsBtn{
+  position:fixed;
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+  cursor:pointer;
+  z-index:9999;
+  border:2px solid var(--star-color);
+  background:var(--floating-bg);
+  color:var(--floating-color);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+#floatingSideviewBtn { bottom: 218px; right: 20px; }
+#effectsBtn          { bottom: 168px; right: 20px; }
+#audioBtn            { bottom: 118px; right: 20px; }
+#msgBtn              { bottom: 68px;  right: 20px; }
+
+
+/* Sticky Footer */
+.sticky-footer{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  background:var(--card);
+  text-align:center;
+  padding:12px 0;
+  font-size:14px;
+  font-weight:600;
+  color:var(--text);
+  z-index:20000;
+  animation: footerAnim 3s ease-in-out infinite alternate;
+}
+@keyframes footerAnim{0%{transform:translateY(0);}100%{transform:translateY(-4px);}}
+
+
+.sticky-footer .heart {
+  display: inline-block;
+  font-size: 12px;
+  margin-left: 4px;
+  animation: pulseHeart 2s ease-in-out infinite;
+}
+@keyframes pulseHeart {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+/* End of page footer */
+.end-footer {
+  text-align: center;
+  padding: 40px 20px 80px;
+  color: var(--muted);
+  font-size: 15px;
+  background: var(--bg);
+}
+
+.end-footer .links {
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+.end-footer .official {
+  font-weight: 800;
+  font-size: 20px;
+  margin: 12px 0;
+  color: var(--text);
+}
+
+.end-footer .copyright {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+/* Message Panel */
+#msgPanel {
+  position: fixed;
+  right: 20px;
+  bottom: 130px;
+  width: 240px;
+  background: var(--card);
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+  padding: 12px;
+  z-index: 10003;
+  display: none;
+}
+
+#msgPanel.visible {
+  display: block;
+}
+
+#msgPanel h3 {
+  margin: 0 0 8px;
+  font-size: 14px;
+  text-align: center;
+  font-weight: 700;
+}
+
+#msgPanel input,
+#msgPanel textarea {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  padding: 6px 8px;
+  font-size: 12px;
+  background: var(--input);
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+#msgPanel textarea {
+  resize: none;
+}
+
+#msgPanel .msg-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+#msgPanel .msg-actions button {
+  border-radius: 999px;
+  border: none;
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  background: var(--star-color);
+  color: #000;
+}
+
+#msgPanel .msg-actions button:last-child {
+  background: var(--border);
+  color: var(--text);
+}
+
+/* Favorites Panel */
+#favOverlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9998;display:none;}
+#favPanel{position: fixed; top: 50px; left: 50%; transform: translateX(-50%); width: 90%; max-width:800px; max-height: 300px; overflow-y: auto; background: var(--card); border-radius:12px; z-index: 9999; padding: 12px 14px; box-shadow: 0 5px 20px rgba(0,0,0,.25); display: none;}
+#favPanel h3{margin: 0 0 10px 0;font-size: 16px;font-weight: 700;color: var(--text);}
+.fav-grid{display: grid;grid-template-columns: repeat(auto-fill,minmax(100px,1fr));gap: 10px;}
+.fav-card{background:var(--card);border-radius:10px;padding:6px;text-align:center;border:1px solid var(--border);cursor:pointer;transition: transform .2s, box-shadow .2s;}
+.fav-card:hover{transform: scale(1.05);box-shadow: 0 5px 15px rgba(0,0,0,.2);}
+.fav-card img{width:40px;height:40px;margin-bottom:6px;}
+.fav-close{position:absolute;right:12px;top:12px;font-size:18px;cursor:pointer;color: var(--muted);}
+
+/* WhatsApp Channel Modal (FIXED SMALL VERSION) */
+#whatsappModal{
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(100%);
+  width: 88%;
+  max-width: 360px;
+  background: var(--card);
+  border-radius: 22px 22px 0 0;
+  box-shadow: 0 -10px 30px rgba(0,0,0,0.25);
+  padding: 22px 20px 24px;
+  z-index: 2000;
+  opacity: 0;
+  visibility: hidden;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+  border: 2px solid var(--star-color);
+  border-bottom: none;
+}
+
+#whatsappModal.visible{
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+/* CENTERED & ATTRACTIVE CLOSE BUTTON */
+#whatsappModal button{
+  position:absolute;
+  top:-18px;
+  left:50%;
+  transform:translateX(-50%);
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  border:none;
+  background:linear-gradient(135deg,#f5c518,#ffd500);
+  color:#000;
+  font-size:22px;
+  font-weight:900;
+  cursor:pointer;
+  box-shadow:0 6px 18px rgba(245,197,24,0.6);
+  transition:transform 0.3s, box-shadow 0.3s;
+}
+
+#whatsappModal button:hover{
+  transform:translateX(-50%) scale(1.15) rotate(90deg);
+  box-shadow:0 10px 25px rgba(245,197,24,0.8);
+}
+
+#whatsappModal h2{
+  font-size:1.3rem;
+  font-weight:900;
+  margin:10px 0 10px;
+  text-align:center;
+  background:linear-gradient(135deg,#f5c518,#ffd500);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+#whatsappModal p{
+  font-size:0.95rem;
+  margin:0 0 18px;
+  text-align:center;
+  color:var(--muted);
+  line-height:1.5;
+}
+
+#whatsappModal a{
+  display:block;
+  width:100%;
+  text-align:center;
+  background:linear-gradient(90deg,#f5c518,#ffd500);
+  color:#000 !important;
+  padding:14px 0;
+  border-radius:14px;
+  font-weight:800;
+  font-size:1.05rem;
+  text-decoration:none;
+  box-shadow:0 6px 20px rgba(245,197,24,0.4);
+  transition:all 0.3s ease;
+}
+
+#whatsappModal a:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 28px rgba(245,197,24,0.55);
+}
+
+/* Sideview, Audio, Effects Panels */
+#sideviewOverlay, #audioOverlay, #effectsOverlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.15); backdrop-filter: blur(4px);
+  opacity: 0; visibility: hidden;
+  transition: opacity 0.5s ease, visibility 0.5s;
+  z-index: 9998;
+}
+#sideviewOverlay.visible, #audioOverlay.visible, #effectsOverlay.visible { opacity: 1; visibility: visible; }
+
+#sideviewPanel, #audioPanel, #effectsPanel {
+  position: fixed; right: 20px; width: 200px;
+  background: var(--sideview-bg); backdrop-filter: blur(var(--sideview-blur));
+  border-radius: 16px; padding: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  border: 2px solid var(--sideview-border); z-index: 9999;
+  opacity: 0; visibility: hidden;
+  transform: translateX(100%) scale(0.8); transform-origin: bottom right;
+  display: none;
+}
+#sideviewPanel { bottom: 210px; }
+#audioPanel { bottom: 150px; }
+#effectsPanel { bottom: 270px; width: 180px; padding: 12px; }
+
+#sideviewPanel.visible, #audioPanel.visible, #effectsPanel.visible {
+  opacity: 1; visibility: visible;
+  display: block;
+  animation: bounceInRight 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+#sideviewPanel.closing, #audioPanel.closing, #effectsPanel.closing { animation: slideOutRight 0.5s ease forwards; }
+
+@keyframes bounceInRight {
+  0% { transform: translateX(100%) scale(0.8); opacity: 0; }
+  60% { transform: translateX(-15px) scale(1.05); opacity: 1; }
+  80% { transform: translateX(10px) scale(0.98); }
+  100% { transform: translateX(0) scale(1); opacity: 1; }
+}
+@keyframes slideOutRight { to { transform: translateX(120%) scale(0.9); opacity: 0; } }
+
+#sideviewPanel .seg-btn, .effect-btn {
+  padding: 10px 12px; border-radius: 12px; margin-bottom: 8px;
+  cursor: pointer; text-align: center; font-weight: 600;
+  background: rgba(255,255,255,0.9); color: #000;
+  transition: all 0.3s ease;
+}
+body.dark #sideviewPanel .seg-btn, body.dark .effect-btn { background: rgba(0,0,0,0.6); color: #fff; }
+#sideviewPanel .seg-btn:hover, .effect-btn:hover { transform: translateX(-6px); box-shadow: 0 4px 15px rgba(245,197,24,0.4); }
+#sideviewPanel .seg-btn.active, .effect-btn.active {
+  background: linear-gradient(90deg, #f5c518, #ffd500);
+  color: #000; box-shadow: 0 0 15px rgba(245,197,24,0.6);
+}
+
+.audio-item {
+  padding: 12px; border-radius: 12px; margin-bottom: 10px;
+  cursor: pointer; background: rgba(255,255,255,0.8);
+  transition: all 0.3s ease; font-weight: 600;
+  display: flex; align-items: center; gap: 12px;
+}
+body.dark .audio-item { background: rgba(0,0,0,0.6); }
+.audio-item:hover { transform: translateX(-6px); box-shadow: 0 4px 15px rgba(245,197,24,0.4); }
+.audio-item.playing {
+  background: linear-gradient(90deg, #f5c518, #ffd500);
+  color: #000; box-shadow: 0 0 15px rgba(245,197,24,0.6);
+}
+.audio-item span:first-child { font-size: 20px; }
+
+#effectsPanel h3, #audioPanel h3 {
+  margin: 0 0 12px; font-size: 15px; font-weight: 700; text-align: center;
+}
+
+/* Particle container */
+#particles-container {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* APK Promo Dialog (new style) */
+#apkPromoOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(6px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 12000;
+}
+
+#apkPromoOverlay.visible {
+  display: flex;
+}
+
+@keyframes apkPromoIn {
+  0% { opacity: 0; transform: translateY(16px) scale(0.95); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+#apkPromoDialog {
+  width: 84%;
+  max-width: 320px;
+  background: var(--card);
+  border-radius: 20px;
+  padding: 16px 16px 14px;
+  text-align: center;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.45);
+  border: 2px solid var(--star-color);
+  position: relative;
+  animation: apkPromoIn 0.4s ease-out;
+}
+
+#apkPromoIcon {
+  font-size: 32px;
+  margin-bottom: 6px;
+}
+
+#apkPromoTitle {
+  margin: 0 0 4px;
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+#apkPromoSubtitle {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+#apkPromoBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(245,197,24,0.08);
+  border: 1px dashed var(--star-color);
+  font-size: 11px;
+  margin-bottom: 10px;
+}
+
+#apkPromoActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+#apkPromoDownload,
+#apkPromoClose {
+  flex: 1;
+  border-radius: 999px;
+  border: none;
+  padding: 10px 0;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#apkPromoDownload {
+  background: linear-gradient(90deg,#f5c518,#ffd500);
+  color: #000;
+  box-shadow: 0 8px 24px rgba(245,197,24,0.5);
+}
+
+#apkPromoDownload:hover {
+  transform: translateY(-2px);
+}
+
+#apkPromoClose {
+  background: var(--border);
+  color: var(--text);
+}
+
+/* Custom Admin Dialog - match APK style */
+#customDialogOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(6px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 11950;
+}
+
+#customDialogOverlay.visible {
+  display: flex;
+}
+
+@keyframes customDialogIn {
+  0% { opacity: 0; transform: translateY(16px) scale(0.96); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+#customDialog {
+  width: 84%;
+  max-width: 320px;
+  background: var(--card);
+  border-radius: 20px;
+  padding: 40px 16px 16px;
+  text-align: center;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.45);
+  border: 2px solid var(--star-color);
+  animation: customDialogIn 0.35s ease-out;
+  position: relative;
+}
+
+#customDialog h3 {
+  margin: 0 0 6px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+#customDialog p {
+  margin: 0 0 14px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+#customDialogImageWrapper {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--custom-image-size, 56px);
+  height: var(--custom-image-size, 56px);
+  border-radius: 50%;
+  overflow: hidden;
+  display: none;
+}
+
+#customDialogImageWrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+#customDialogActions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+#customDialogActions button {
+  flex: 1;
+  min-width: 0;
+  border-radius: 999px;
+  border: none;
+  padding: 8px 0;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+
+#customDialogFollowBtn {
+  background: linear-gradient(90deg,#f5c518,#ffd500);
+  color: #000;
+}
+
+#customDialogCloseBtn {
+  background: var(--border);
+  color: var(--text);
+}
+
+#toast{position:fixed;bottom:240px;right:20px;background:var(--star-color);color:#000;padding:16px 20px;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.3);opacity:0;transform: translateY(40px);transition:opacity .5s ease, transform .5s ease;z-index:10001;font-weight:600;font-size:15px;}
+#toast.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+<div id="splashOverlay">
+  <div id="splashInner" class="text-center">
+    <div class="logo-container mx-auto">
+      <div class="logo-bg">
+        <img src="https://i.ibb.co/wvw542Y/132974.png" alt="Usman Toolkit">
+      </div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="orbit-dot"></div>
+      <div class="orbit-dot"></div>
+      <div class="orbit-dot"></div>
+    </div>
+    <h1 class="title">USMAN TOOLKIT</h1>
+    <p class="subtitle">THE NO.1 CYBER &amp; AI HUB</p>
+    <div class="progress-container">
+      <div class="progress-bar" id="progress"></div>
+    </div>
+    <div class="percent" id="percent">0%</div>
+    <p class="loading-text">Loading awesome tools...</p>
+  </div>
+</div>
+
+<div class="topbar">🚀 Usman Tools: The No 1 Cyber Toolkit & AI Hub</div>
+
+<div class="header">
+  <div class="logo">
+    <img src="https://i.ibb.co/wvw542Y/132974.png" alt="Logo"> USMAN TOOLKIT
+  </div>
+  <div class="header-right">
+    <div class="icon-btn" id="modeBtn" onclick="toggleMode()">🌙</div>
+    <div class="icon-btn" id="favToggle" onclick="toggleFavorites()">⭐</div>
+    <div class="icon-btn" id="sideviewBtn" onclick="toggleSideview()">☰</div>
+    <div class="icon-btn" onclick="window.location.href='/admin'">⚙️</div>
+  </div>
+</div>
+
+<div class="hero">
+  <h1>Hack The <span class="future">Future</span>.</h1>
+  <p>The Official Usman Toolkit</p>
+  <div class="stats">
+    <div class="stat" id="liveStat">🟢 0 Live</div>
+    <div class="stat" id="viewsStat">👁 0 Views</div>
+    <div class="stat" id="toolsStat">🧩 0 Tools</div>
+  </div>
+</div>
+
+<div class="search">
+  <input type="text" id="searchInput" placeholder="">
+</div>
+
+<div class="filter-panel">
+  <div class="filter-btn active" data-filter="all">All</div>
+  <div class="filter-btn" data-filter="trending">Trending</div>
+  <div class="filter-btn" data-filter="latest">Latest</div>
+  <div class="filter-btn" data-filter="category">Categories</div>
+</div>
+
+<div class="grid" id="toolGrid">
+  <div class="card" data-id="quran" data-link="https://love-quran-red.vercel.app/" data-icon="https://i.ibb.co/qYmkfyYr/133290.png" data-type="category">
+    <div class="star">★</div><div class="icon"></div><h3>Quran Pak</h3><span>Usman Tools</span>
+  </div>
+  <div class="card" data-id="chatbot" data-link="https://dummy-hazel-seven.vercel.app/" data-icon="https://i.ibb.co/TBgts4P7/132821.png" data-type="category">
+    <div class="star">★</div><div class="icon"></div><h3>Premium Tools</h3><span>Usman Tools</span>
+  </div>
+  <div class="card" data-id="studio" data-link="https://all-dummy-by-usman.vercel.app/" data-icon="https://i.ibb.co/rgpNKZP/132813.png" data-type="trending">
+    <div class="star">★</div><div class="icon"></div><h3>Premium Hacks</h3><span>Usman Tools</span>
+  </div>
+  <div class="card" data-id="latest1" data-link="https://usman-channel-hub.rf.gd/index.php" data-icon="https://i.ibb.co/xK89Md5N/132819.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>Promotions</h3><span>Usman Tools</span>
+  </div>
+  <div class="card" data-id="latest2" data-link="https://whats-app-link-maker-with-text.vercel.app/" data-icon="https://i.ibb.co/Y7Pz67Zv/132837.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>Number To Link</h3><span>Usman Tools</span>
+  </div>
+    <div class="card" data-id="latest3" data-link="https://all-tv-channels-by-usman.vercel.app/" data-icon="https://i.ibb.co/zTMdH056/132836.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>Live Channels</h3><span>Usman Tools</span>
+  </div>
+      <div class="card" data-id="lrafio3" data-link="https://usman-gems-otp.vercel.app/" data-icon="https://i.ibb.co/j9FStngB/134108.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>Radio Channels</h3><span>Usman Tools</span>
+  </div>
+      <div class="card" data-id="latest4" data-link="https://yt-info-by-usman.vercel.app/" data-icon="https://i.ibb.co/Fbp1bqhF/132839.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>YouTube Tools</h3><span>Usman Tools</span>
+  </div>
+        <div class="card" data-id="latest5" data-link="https://new-sim-database-by-usman.vercel.app/" data-icon="https://i.ibb.co/d4jGF6YK/132840.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>Sim Database 1</h3><span>Usman Tools</span>
+  </div>
+          <div class="card" data-id="latest6" data-link="https://usman-sim-db-2.vercel.app/" data-icon="https://i.ibb.co/N2mdbLxY/134798.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>Sim Database 2</h3><span>Usman Tools</span>
+  </div>
+   <div class="card" data-id="latest7" data-link="https://database-new-by-usman.vercel.app/" data-icon="https://i.ibb.co/x8F8ybHw/132849.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>Sim Database 3</h3><span>Usman Tools</span>
+  </div>
+     <div class="card" data-id="latest8" data-link="https://web-to-apk-by-usman.vercel.app/" data-icon="https://i.ibb.co/5f9jZWb/132850.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>Web To Apk</h3><span>Usman Tools</span>
+  </div>
+       <div class="card" data-id="latest9" data-link="https://rsena.vip/pages/login/register?promo_code=FA396772" data-icon="https://i.ibb.co/Gv0dn1Cm/132865.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>Online Earning</h3><span>Usman Tools</span>
+  </div>
+       <div class="card" data-id="latest10" data-link="https://ai-image-generator-by-usman.vercel.app/" data-icon="https://i.ibb.co/995FKNBd/132874.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>Image Generator</h3><span>Usman Tools</span>
+  </div>
+         <div class="card" data-id="latest11" data-link="https://background-remover-by-usman.vercel.app/" data-icon="https://i.ibb.co/S7xzLd1w/132877.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>BG Remover</h3><span>Usman Tools</span>
+  </div>
+
+  <div class="card" data-id="latest12" data-link="https://photo-watermark-by-usman.vercel.app/" data-icon="https://i.ibb.co/jkz6TrFv/132880.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>Photo Watermark</h3><span>Usman Tools</span>
+  </div>
+  <div class="card" data-id="latest13" data-link="https://image-to-link-by-usman.vercel.app/" data-icon="https://i.ibb.co/gLtwjkDX/132884.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>Image To Link</h3><span>Usman Tools</span>
+  </div>
+             <div class="card" data-id="texttovoice" data-link="https://voice-changer-by-usman.vercel.app/" data-icon="https://i.ibb.co/TDfYcwXh/133366.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>Text To Voice</h3><span>Usman Tools</span>
+  </div>
+  <div class="card" data-id="latest14" data-link="https://custom-email-by-usman.vercel.app/" data-icon="https://i.ibb.co/TMzsDM0X/132887.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>Temp Mail</h3><span>Usman Tools</span>
+  </div>
+  <div class="card" data-id="latest15" data-link="https://customee-gmail-temp-by-usman.vercel.app/" data-icon="https://i.ibb.co/m5kMHqn2/132886.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>Custom Temp Mail</h3><span>Usman Tools</span>
+  </div>
+    <div class="card" data-id="gmaill" data-link="https://prank-gmails-by-usman.vercel.app/" data-icon="https://i.ibb.co/ymnM5cjc/133293.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>Unlimited Gmails</h3><span>Usman Tools</span>
+  </div>
+    <div class="card" data-id="latest16" data-link="https://pdf-by-usman.vercel.app/" data-icon="https://i.ibb.co/0pg61kyb/132888.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>PDF Pro</h3><span>Usman Tools</span>
+  </div>
+    <div class="card" data-id="latest17" data-link="https://banning-system-by-usman.vercel.app/" data-icon="https://i.ibb.co/99r7d1YR/132896.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>WhatsApp Ban</h3><span>Usman Tools</span>
+  </div>
+      <div class="card" data-id="latest18" data-link="https://whatsapp-unbann-by-usman.vercel.app/" data-icon="https://i.ibb.co/Q3YpQfCB/132898.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>WhatsApp UnBan</h3><span>Usman Tools</span>
+  </div>
+        <div class="card" data-id="latest19" data-link="https://tik-tok-by-usman-ui9s.vercel.app/" data-icon="https://i.ibb.co/dNWnTc8/132910.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>TikTok Ban</h3><span>Usman Tools</span>
+  </div>
+  <div class="card" data-id="latest20" data-link="https://tik-tok-unban-by-usman.vercel.app/" data-icon="https://i.ibb.co/CgrhKJm/132912.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>TikTok UnBan</h3><span>Usman Tools</span>
+  </div>
+    <div class="card" data-id="latest2titi0" data-link="https://tik-tok-video-downloader-by-usman.vercel.app/" data-icon="https://i.ibb.co/CsQHpzkJ/134699.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>TikTok Downloader</h3><span>Usman Tools</span>
+  </div>
+    <div class="card" data-id="latest21" data-link="https://animate-web-gems.lovable.app" data-icon="https://i.ibb.co/7xxd2ZPQ/132913.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>OTP Hub</h3><span>Usman Tools</span>
+  </div>
+      <div class="card" data-id="latest22" data-link="https://toolkit-maker-by-usman.vercel.app/" data-icon="https://i.ibb.co/7NWYgZyF/132925.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>Toolkit Maker 1</h3><span>Usman Tools</span>
+  </div>
+        <div class="card" data-id="latest23" data-link="https://usman-own-toolkit-generator-2.vercel.app/" data-icon="https://i.ibb.co/S4H2ZWbb/132927.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>Toolkit Maker 2</h3><span>Usman Tools</span>
+  </div>
+            <div class="card" data-id="latest2j3" data-link="https://toolkit-gen-by-usman.vercel.app/" data-icon="https://i.ibb.co/pvnBx2Cx/135544.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>Toolkit Maker 3</h3><span>Usman Tools</span>
+  </div>
+          <div class="card" data-id="hahaka" data-link="https://usman-food-recipes.vercel.app/" data-icon="https://i.ibb.co/BMfRNwd/133377.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>Halal Recipes</h3><span>Usman Tools</span>
+  </div>
+          <div class="card" data-id="latest23" data-link="https://asitha.top/login?ref=spabdull2320" data-icon="https://i.ibb.co/1fLN2T3G/132930.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>Channel Reactions</h3><span>Usman Tools</span>
+  </div>
+            <div class="card" data-id="latest24" data-link="https://wingo-by-usman.vercel.app/" data-icon="https://i.ibb.co/fVKmCcsK/132931.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>WINGO Hack</h3><span>Usman Tools</span>
+  </div>
+              <div class="card" data-id="latest25" data-link="https://wa.me/+93776544491?text=Hello!%20Mujhy%20Meta%20Verify%20Krwana%20Hy..!!" data-icon="https://i.ibb.co/B5cyYMtd/132932.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>Meta Verify</h3><span>Usman Tools</span>
+  </div>
+            <div class="card" data-id="latest26" data-link="https://apk-downloader-by-usman.vercel.app/" data-icon="https://i.ibb.co/C4gwP56/132933.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>APK Store</h3><span>Usman Tools</span>
+  </div>
+              <div class="card" data-id="latest27" data-link="https://sms-bomber-by-usman.vercel.app/" data-icon="https://i.ibb.co/HDrC8rK0/132935.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>Sms Bomber</h3><span>Usman Tools</span>
+  </div>
+                <div class="card" data-id="latest28" data-link="https://source-code-downloader-by-usman.vercel.app/" data-icon="https://i.ibb.co/9Hy4c8P7/132938.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>Website Fetcher</h3><span>Usman Tools</span>
+  </div>
+                  <div class="card" data-id="latest29" data-link="https://usman-wen.xo.je/" data-icon="https://i.ibb.co/BK5wqH9h/132942.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>Website Hosting</h3><span>Usman Tools</span>
+  </div>
+       <div class="card" data-id="lateswebt29" data-link="https://usman-web.free.nf/" data-icon="https://i.ibb.co/Z65FrWYQ/135201.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>Media Hosting</h3><span>Usman Tools</span>
+  </div>
+                    <div class="card" data-id="latest30" data-link="https://html-preview-edit-by-usman.vercel.app/" data-icon="https://i.ibb.co/DfdkVytd/132943.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>HTML Editor</h3><span>Usman Tools</span>
+  </div>
+   <div class="card" data-id="latest31" data-link="https://usman-web-preview.vercel.app/" data-icon="https://i.ibb.co/6cL6k7fW/132949.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>HTML Designer</h3><span>Usman Tools</span>
+  </div>
+     <div class="card" data-id="latest32" data-link="https://html-encrypter-by-usman.vercel.app/" data-icon="https://i.ibb.co/dwXgcGvH/132950.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>HTML Encrypter 1</h3><span>Usman Tools</span>
+  </div>
+       <div class="card" data-id="latest3y2" data-link="https://usman-html-encrypter-preivew.vercel.app/" data-icon="https://i.ibb.co/8DK7Ttcw/134971.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>HTML Encrypter 2</h3><span>Usman Tools</span>
+  </div>
+       <div class="card" data-id="latest33" data-link="https://text-to-file-by-usman.vercel.app/" data-icon="https://i.ibb.co/VYymkgcK/132951.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>Text To File</h3><span>Usman Tools</span>
+  </div>
+         <div class="card" data-id="latest34" data-link="https://api-checker-by-usman.vercel.app/" data-icon="https://i.ibb.co/23sg6ctk/132952.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>API Checker</h3><span>Usman Tools</span>
+  </div>
+           <div class="card" data-id="latest35" data-link="https://link-shortner-by-usman.vercel.app/" data-icon="https://i.ibb.co/HLFSCz5V/132955.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>URL Shortener</h3><span>Usman Tools</span>
+  </div>
+    <div class="card" data-id="latest36" data-link="https://link-locker-by-usman.vercel.app/" data-icon="https://i.ibb.co/sv8418MM/132958.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>URL Locker</h3><span>Usman Tools</span>
+  </div>
+  <div class="card" data-id="latest37" data-link="https://cc-generator-by-usman.vercel.app/" data-icon="https://i.ibb.co/N6Dj4hfp/132961.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>CC Generator</h3><span>Usman Tools</span>
+  </div>
+    <div class="card" data-id="latebot" data-link="https://red-dragon-by-usman.vercel.app/" data-icon="https://i.ibb.co/v6dg7WP1/133436.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>Red Dragon Bot</h3><span>Usman Tools</span>
+  </div>
+      <div class="card" data-id="latebot" data-link="https://usman-ddos-attack.vercel.app/" data-icon="https://i.ibb.co/TDc6c8rp/133459.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>DDOS Attack</h3><span>Usman Tools</span>
+  </div>
+  <div class="card" data-id="usmahtnk" data-link="https://zip-snap-style.lovable.app" data-icon="https://i.ibb.co/vxZrFV1x/133598.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>Website Cloner</h3><span>Usman Tools</span>
+  </div>
+      <div class="card" data-id="uaiman" data-link="https://web-to-zip-by-usman.vercel.app/" data-icon="https://i.ibb.co/pjrNB2vn/133996.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>AI Web Creator</h3><span>Usman Tools</span>
+  </div>
+          <div class="card" data-id="uaimgffwebr" data-link="https://usman-html-obfuscator.vercel.app/" data-icon="https://i.ibb.co/RkSQKwwM/134792.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>Web Obfuscator 1</h3><span>Usman Tools</span>
+  </div>
+  <div class="card" data-id="uaimgffwwwebr" data-link="https://usman-new-html-obfuscator.vercel.app/" data-icon="https://i.ibb.co/BHvnJtyd/134789.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>Web Obfuscator 2</h3><span>Usman Tools</span>
+  </div>
+        <div class="card" data-id="uaimgffr" data-link="https://ai-gf-by-usman.vercel.app/" data-icon="https://i.ibb.co/NdfBmxjf/134263.webp" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>AI Girlfriend</h3><span>Usman Tools</span>
+  </div>
+          <div class="card" data-id="unanoffr" data-link="https://usman-nano-banana.vercel.app/" data-icon="https://i.ibb.co/RZ1mSdF/134946.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>Nano Banana</h3><span>Usman Tools</span>
+  </div>
+    <div class="card" data-id="latest38" data-link="https://whatsapp.com/channel/0029Vb6SwB147XeCTHpikc0O" data-icon="https://i.ibb.co/YFLQZMzN/132964.png" data-type="latest">
+    <div class="star">★</div><div class="icon"></div><h3>Coming Soon</h3><span>Usman Tools</span>
+  </div>
+</div>
+
+<!-- End of page USMAN OFFICIAL section -->
+<div class="end-footer">
+<div class="official">USMAN OFFICIAL TOOLKIT</div>
+  <div class="links">Privacy • Support • WhatsApp</div>
+  
+  <div class="copyright">© Powered By Usman</div>
+</div>
+
+
+<!-- Blur overlay for popup -->
+<div id="apkPromoOverlay">
+  <div id="apkPromoDialog">
+    <div id="apkPromoIcon">📲</div>
+    <div id="apkPromoBadge">✨ Official • Usman Toolkit</div>
+    <h3 id="apkPromoTitle">Download Usman Toolkit APK</h3>
+    <p id="apkPromoSubtitle">Get faster access to all tools directly from your Android home screen.</p>
+    <div id="apkPromoActions">
+      <button id="apkPromoDownload">Download APK</button>
+      <button id="apkPromoClose">Not now</button>
+    </div>
+  </div>
+</div>
+
+<!-- Custom Admin Dialog -->
+<div id="customDialogOverlay">
+  <div id="customDialog">
+    <h3 id="customDialogTitle"></h3>
+    <p id="customDialogMessage"></p>
+    <div id="customDialogImageWrapper">
+      <img id="customDialogImage" alt="Custom dialog image" />
+    </div>
+    <div id="customDialogActions">
+      <button id="customDialogFollowBtn" type="button">Follow</button>
+      <button id="customDialogCloseBtn" type="button">Close</button>
+    </div>
+  </div>
+</div>
+
+<div id="floatingSideviewBtn" onclick="toggleSideview()">☰</div>
+<div id="effectsBtn" onclick="toggleEffectsPanel()">❉</div>
+<div id="audioBtn" onclick="toggleAudioPanel()">🎵</div>
+<div id="msgBtn" onclick="openMsgPanel()">💬</div>
+
+<!-- Message Panel -->
+<div id="msgPanel">
+  <h3>✶ Message To Usman ✶</h3>
+  <input id="msgName" type="text" placeholder="Your name" />
+  <textarea id="msgText" rows="3" placeholder="Your message"></textarea>
+  <div class="msg-actions">
+    <button type="button" onclick="sendUserMessage()">Send</button>
+    <button type="button" onclick="closeMsgPanel()">Close</button>
+  </div>
+</div>
+
+<!-- Particle container -->
+<div id="particles-container"></div>
+<audio id="clickSound" src="data:audio/mpeg;base64,//uQZAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAACcQCA" preload="auto"></audio>
+
+
+<!-- Favorites Panel -->
+<div id="favOverlay" onclick="closeFavPanel()"></div>
+<div id="favPanel">
+  <div class="fav-close" onclick="closeFavPanel()">✖</div>
+  <h3>Your Favorite Tools</h3>
+  <div class="fav-grid" id="favGrid"></div>
+</div>
+
+<!-- Sticky Footer -->
+<div class="sticky-footer">
+  © Powered By Usman With Love <span class="heart">💛</span>
+</div>
+
+
+<!-- Sideview Panel -->
+<div id="sideviewOverlay" onclick="toggleSideview()"></div>
+<div id="sideviewPanel">
+  <div class="seg-btn active" data-cat="">Home</div>
+  <div class="seg-btn" data-cat="tutorial">Tutorial</div>
+  <div class="seg-btn" data-cat="history">History</div>
+  <div class="seg-btn" id="clearHistoryBtn">Clear History</div>
+  <div class="seg-btn" data-cat="other">Other</div>
+  <div style="margin-top:10px;">
+    <div class="seg-btn contact-btn">Contact Owner</div>
+    <div class="seg-btn channel-btn">Join Channel</div>
+  </div>
+</div>
+
+<!-- Audio Panel -->
+<div id="audioOverlay" onclick="toggleAudioPanel()"></div>
+<div id="audioPanel">
+  <h3>🎧 Background Music</h3>
+  <div class="audio-item" data-src="https://n.f-a-k.workers.dev/toolkit-1.mp3">
+    <span>🎵</span> <span>Bohemia Rap</span>
+  </div>
+  <div class="audio-item" data-src="https://n.f-a-k.workers.dev/toolkit-2.mp3">
+    <span>🎵</span> <span>Level Chahida</span>
+  </div>
+  <div class="audio-item" data-src="https://n.f-a-k.workers.dev/toolkit-3.mp3">
+    <span>🎵</span> <span>No Lies</span>
+  </div>
+  <div class="audio-item" data-src="https://n.f-a-k.workers.dev/toolkit-4.mp3">
+    <span>🎵</span> <span>Heart Patient</span>
+  </div>
+  <div class="audio-item" data-src="https://n.f-a-k.workers.dev/toolkit-5.mp3">
+    <span>🎵</span> <span>Link Purany</span>
+  </div>
+  <div class="audio-item" data-src="https://n.f-a-k.workers.dev/toolkit-6.mp3">
+    <span>🎵</span> <span>Face 2 Face</span>
+  </div>
+</div>
+
+<!-- Effects Panel -->
+<div id="effectsOverlay" onclick="toggleEffectsPanel()"></div>
+<div id="effectsPanel">
+  <h3>✨ Effects</h3>
+  <div class="effect-btn" data-effect="snow">❄️ Snow</div>
+  <div class="effect-btn" data-effect="stars">✶ Stars</div>
+  <div class="effect-btn" data-effect="sakura">🌸 Sakura</div>
+  <div class="effect-btn" data-effect="confetti">🎉 Confetti</div>
+  <div class="effect-btn" data-effect="off">✖ Off</div>
+</div>
+
+<!-- WhatsApp Modal -->
+<div id="whatsappModal">
+  <button onclick="closeWhatsappModal()">&times;</button>
+  <h2>Join Our Channel!</h2>
+  <p>Get exclusive tools, updates & alerts instantly 💛</p>
+  <a href="https://whatsapp.com/channel/0029Vb6SwB147XeCTHpikc0O" target="_blank">Join Now 🚀</a>
+</div>
+
+<div id="toast"></div>
+
+<audio id="audioPlayer" preload="metadata"></audio>
+
+<script>
+// Splash + APK Promo + Custom Admin dialogs
+(function initSplashAndDialogs() {
+  const start = () => {
+    const splash = document.getElementById("splashOverlay");
+    const overlay = document.getElementById("apkPromoOverlay");
+    const downloadBtn = document.getElementById("apkPromoDownload");
+    const closeBtn = document.getElementById("apkPromoClose");
+    const customOverlay = document.getElementById("customDialogOverlay");
+    const customTitle = document.getElementById("customDialogTitle");
+    const customMessage = document.getElementById("customDialogMessage");
+    const customFollowBtn = document.getElementById("customDialogFollowBtn");
+    const customCloseBtn = document.getElementById("customDialogCloseBtn");
+  
+    let mainPageShownDelay = 0;
+  
+    // Splash progress animation
+    if (splash) {
+      let progress = 0;
+      const progressBar = document.getElementById("progress");
+      const percentText = document.getElementById("percent");
+  
+      const hideSplash = () => {
+        splash.style.transition = "opacity 0.4s ease";
+        splash.style.opacity = "0";
+        setTimeout(() => {
+          splash.style.display = "none";
+        }, 450);
+      };
+  
+      const interval = setInterval(() => {
+        progress += 2;
+        if (progressBar) {
+          progressBar.style.width = progress + "%";
+        }
+        if (percentText) {
+          percentText.textContent = progress + "%";
+        }
+  
+        if (progress >= 100) {
+          clearInterval(interval);
+          setTimeout(hideSplash, 400);
+        }
+      }, 100);
+  
+      // Absolute fallback: hide splash after ~8 seconds even if something goes wrong
+      setTimeout(() => {
+        if (splash && splash.style.display !== "none") {
+          clearInterval(interval);
+          hideSplash();
+        }
+      }, 8000);
+  
+      // approximate time until main page is visible (100 steps * 100ms + fade timings)
+      mainPageShownDelay = 100 * (100 / 2) + 400 + 450; // ~ 5.8s
+    }
+  
+    // Read admin dialog config from localStorage
+    let config = null;
+    try {
+      const raw = window.localStorage.getItem("usman_toolkit_dialogs_config");
+      if (raw) {
+        config = JSON.parse(raw);
+      }
+    } catch {
+      // ignore
+    }
+  
+    const apkEnabled = config && typeof config.apkEnabled === "boolean" ? config.apkEnabled : true;
+    const apkDelaySeconds = config && typeof config.apkDelaySeconds === "number" ? config.apkDelaySeconds : 7;
+    const apkUrl =
+      (config && config.apkUrl) ||
+      "https://usman-web.free.nf//view.php?file=Usman-Toolkit_2.apk&user=user_3c3027d6b45363c1";
+    const customEnabled = !!(config && config.customEnabled);
+    const customDelaySeconds = config && typeof config.customDelaySeconds === "number" ? config.customDelaySeconds : 10;
+    const customTitleText = (config && config.customTitle) || "";
+    const customMessageText = (config && config.customMessage) || "";
+    const customUrl = (config && config.customUrl) || "";
+    const customFollowLabel = (config && config.customFollowLabel) || "Follow";
+    const customImageUrl = (config && config.customImageUrl) || "";
+    const customImageSize = (config && config.customImageSize) || "56";
+  
+    // APK dialog scheduling
+    if (overlay && downloadBtn && closeBtn && apkEnabled) {
+      setTimeout(() => {
+        overlay.classList.add("visible");
+      }, mainPageShownDelay + apkDelaySeconds * 1000);
+  
+      downloadBtn.addEventListener("click", function() {
+        window.location.href = apkUrl;
+        overlay.classList.remove("visible");
+      });
+  
+      closeBtn.addEventListener("click", function() {
+        overlay.classList.remove("visible");
+      });
+    }
+  
+    // Custom dialog scheduling
+    if (customOverlay && customEnabled && (customTitleText || customMessageText)) {
+      if (customTitle && customTitleText) customTitle.textContent = customTitleText;
+      if (customMessage && customMessageText) customMessage.textContent = customMessageText;
+  
+      if (customFollowBtn) {
+        customFollowBtn.textContent = customFollowLabel || "Follow";
+      }
+  
+      const imageWrapper = document.getElementById("customDialogImageWrapper");
+      const imageEl = document.getElementById("customDialogImage");
+      if (imageWrapper && imageEl && customImageUrl) {
+        imageWrapper.style.display = "block";
+        imageWrapper.style.setProperty("--custom-image-size", `${parseInt(customImageSize || "56", 10)}px`);
+        imageEl.src = customImageUrl;
+      } else if (imageWrapper) {
+        imageWrapper.style.display = "none";
+      }
+  
+      setTimeout(() => {
+        customOverlay.classList.add("visible");
+      }, mainPageShownDelay + customDelaySeconds * 1000);
+  
+      const closeCustom = () => {
+        customOverlay.classList.remove("visible");
+      };
+  
+      if (customFollowBtn) {
+        if (customUrl) {
+          customFollowBtn.style.display = "inline-flex";
+          customFollowBtn.addEventListener("click", function() {
+            window.open(customUrl, "_blank");
+            closeCustom();
+          });
+        } else {
+          customFollowBtn.style.display = "none";
+        }
+      }
+  
+      if (customCloseBtn) {
+        customCloseBtn.addEventListener("click", closeCustom);
+      }
+    }
+  };
+
+  if (document.readyState === "complete" || document.readyState === "interactive") {
+    start();
+  } else {
+    window.addEventListener("load", start);
+  }
+})();
+
+// Panel toggles
+function toggleFavorites() {
+  const panel = document.getElementById("favPanel");
+  const overlay = document.getElementById("favOverlay");
+  panel.style.display = panel.style.display === "block" ? "none" : "block";
+  overlay.style.display = overlay.style.display === "block" ? "none" : "block";
+  if (panel.style.display === "block") {
+    panel.classList.add("visible");
+    renderFavTools();
+  } else {
+    panel.classList.remove("visible");
+  }
+}
+function closeFavPanel() { toggleFavorites(); }
+
+function toggleSideview() {
+  const panel = document.getElementById("sideviewPanel");
+  const overlay = document.getElementById("sideviewOverlay");
+  if (panel.classList.contains("visible")) {
+    panel.classList.add("closing");
+    overlay.classList.remove("visible");
+    setTimeout(() => {
+      panel.classList.remove("visible", "closing");
+      panel.style.display = "none";
+      overlay.style.display = "none";
+    }, 500);
+  } else {
+    panel.style.display = "block";
+    overlay.style.display = "block";
+    void panel.offsetWidth;
+    panel.classList.add("visible");
+    overlay.classList.add("visible");
+  }
+}
+
+function toggleAudioPanel() {
+  const panel = document.getElementById("audioPanel");
+  const overlay = document.getElementById("audioOverlay");
+  if (panel.classList.contains("visible")) {
+    panel.classList.add("closing");
+    overlay.classList.remove("visible");
+    setTimeout(() => {
+      panel.classList.remove("visible", "closing");
+      panel.style.display = "none";
+      overlay.style.display = "none";
+    }, 500);
+  } else {
+    panel.style.display = "block";
+    overlay.style.display = "block";
+    void panel.offsetWidth;
+    panel.classList.add("visible");
+    overlay.classList.add("visible");
+  }
+}
+
+function toggleEffectsPanel() {
+  const panel = document.getElementById("effectsPanel");
+  const overlay = document.getElementById("effectsOverlay");
+  if (panel.classList.contains("visible")) {
+    panel.classList.add("closing");
+    overlay.classList.remove("visible");
+    setTimeout(() => {
+      panel.classList.remove("visible", "closing");
+      panel.style.display = "none";
+      overlay.style.display = "none";
+    }, 500);
+  } else {
+    panel.style.display = "block";
+    overlay.style.display = "block";
+    void panel.offsetWidth;
+    panel.classList.add("visible");
+    overlay.classList.add("visible");
+  }
+}
+
+function openTool(link) {
+  const clickSound = document.getElementById("clickSound");
+  if (clickSound) {
+    try {
+      clickSound.currentTime = 0;
+      clickSound.play().catch(() => {});
+    } catch {
+      // ignore
+    }
+  }
+  window.open(link, "_blank");
+}
+
+(function attachCardClicks() {
+  const cards = document.querySelectorAll(".card[data-link]");
+  cards.forEach((card) => {
+    card.addEventListener("click", () => {
+      const link = card.getAttribute("data-link");
+      if (link) {
+        openTool(link);
+      }
+    });
+  });
+})();
+
+// WhatsApp Modal (kept for future use)
+function openWhatsappModal() {
+  document.getElementById("whatsappModal").classList.add("visible");
+}
+function closeWhatsappModal() {
+  document.getElementById("whatsappModal").classList.remove("visible");
+}
+
+// Message panel
+const MESSAGE_STORAGE_KEY = "usman_toolkit_messages";
+
+function openMsgPanel() {
+  const panel = document.getElementById("msgPanel");
+  panel.classList.add("visible");
+}
+
+function closeMsgPanel() {
+  const panel = document.getElementById("msgPanel");
+  panel.classList.remove("visible");
+}
+
+function sendUserMessage() {
+  const nameInput = document.getElementById("msgName");
+  const textInput = document.getElementById("msgText");
+  const name = nameInput.value.trim() || "Anonymous";
+  const message = textInput.value.trim();
+
+  if (!message) {
+    showToast("Please type a message first ✍️");
+    return;
+  }
+
+  let messages = [];
+  try {
+    const parsed = JSON.parse(localStorage.getItem(MESSAGE_STORAGE_KEY) || "null");
+    if (Array.isArray(parsed)) messages = parsed;
+  } catch {}
+
+  messages.unshift({
+    id: Date.now(),
+    name,
+    message,
+    createdAt: new Date().toISOString(),
+  });
+
+  try {
+    localStorage.setItem(MESSAGE_STORAGE_KEY, JSON.stringify(messages));
+  } catch {}
+
+  nameInput.value = "";
+  textInput.value = "";
+  closeMsgPanel();
+  showToast("Message sent to admin ✅");
+}
+
+const STORAGE_KEY = "usman_toolkit_tools";
+
+let toolsData = [];
+try {
+  const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+  if (Array.isArray(stored) && stored.length) {
+    toolsData = stored;
+  }
+} catch (e) {
+  console.error("Failed to parse stored tools", e);
+}
+
+if (!toolsData.length) {
+  const domCards = document.querySelectorAll("#toolGrid > .card");
+  toolsData = Array.from(domCards).map((card, index) => {
+    const id = card.dataset.id || `seed-${index + 1}`;
+    const name = (card.querySelector("h3")?.textContent || "").trim() || "Untitled tool";
+    const iconImg = card.querySelector(".icon img");
+    const iconUrl = iconImg ? iconImg.src : card.dataset.icon || "";
+    const toolUrl = card.dataset.link || "";
+    const subtitle = (card.querySelector("span")?.textContent || "").trim() || "Usman Tools";
+    const type = card.dataset.type || "category";
+
+    return {
+      id,
+      name,
+      iconUrl,
+      toolUrl,
+      subtitle,
+      type,
+      createdAt: new Date().toISOString(),
+    };
+  });
+
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(toolsData));
+  } catch (e) {
+    console.error("Failed to save tools", e);
+  }
+}
+
+const SUPABASE_URL = "https://swszorbrprxcrsvueero.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN3c3pvcmJycHJ4Y3JzdnVlZXJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4Nzk0NDAsImV4cCI6MjA4MjQ1NTQ0MH0.arXRYdVDvNTMgRzHhHcjKdLzhUTQB7YGeI7uUa4WlwM";
+
+async function pingToolkitMetrics() {
+  try {
+    let clientId = localStorage.getItem("usman_toolkit_client_id");
+    if (!clientId) {
+      clientId = (self.crypto?.randomUUID?.() || Math.random().toString(36).slice(2));
+      localStorage.setItem("usman_toolkit_client_id", clientId);
+    }
+
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/toolkit-metrics`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      },
+      body: JSON.stringify({ clientId }),
+    });
+
+    if (!res.ok) return;
+
+    const data = await res.json();
+    const liveEl = document.getElementById("liveStat");
+    const viewsEl = document.getElementById("viewsStat");
+
+    if (liveEl && typeof data.online === "number") {
+      liveEl.textContent = `🟢 ${data.online} Live`;
+    }
+    if (viewsEl && typeof data.totalViews === "number") {
+      viewsEl.textContent = `👁 ${data.totalViews} Views`;
+    }
+  } catch (e) {
+    console.error("Failed to ping toolkit metrics", e);
+  }
+}
+
+const allCards = [];
+
+function buildCardFromTool(tool) {
+  const card = document.createElement("div");
+  card.className = "card";
+  card.dataset.id = tool.id;
+  card.dataset.link = tool.toolUrl;
+  card.dataset.icon = tool.iconUrl;
+  card.dataset.type = tool.type || "category";
+  card.innerHTML = `<div class="star">★</div><div class="icon"><img src="${tool.iconUrl}"></div><h3>${tool.name}</h3><span>${tool.subtitle || "Usman Tools"}</span>`;
+  allCards.push(card);
+}
+
+toolsData.forEach(buildCardFromTool);
+
+let historyTools = JSON.parse(localStorage.getItem("history") || "[]");
+let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+
+// Update hero stats
+(function updateHeroStats(){
+  const toolsCount = toolsData.length;
+  const toolsEl = document.getElementById("toolsStat");
+  if (toolsEl) {
+    toolsEl.textContent = `🧩 ${toolsCount} Tools`;
+  }
+
+  // Initial metrics ping + keep-alive every 60s
+  pingToolkitMetrics();
+  setInterval(pingToolkitMetrics, 60000);
+})();
+
+function renderTools(filter = "all", searchTerm = "") {
+  const grid = document.getElementById("toolGrid");
+  grid.innerHTML = "";
+
+  const lowercaseSearch = searchTerm.toLowerCase();
+
+  allCards.forEach(card => {
+    const type = card.dataset.type || "category";
+    const title = card.querySelector("h3").textContent.toLowerCase();
+
+    if (filter !== "all" && type !== filter) return;
+    if (searchTerm && !title.includes(lowercaseSearch)) return;
+
+    const clone = card.cloneNode(true);
+    grid.appendChild(clone);
+  });
+
+  attachCardEvents();
+}
+
+function attachCardEvents() {
+  document.querySelectorAll("#toolGrid .card").forEach(card => {
+    const star = card.querySelector(".star");
+    const id = card.dataset.id;
+
+    if (star && favorites.includes(id)) star.classList.add("active");
+
+    card.addEventListener("click", e => {
+      if (e.target.classList.contains("star")) return;
+
+      historyTools = historyTools.filter(item => item !== id);
+      historyTools.unshift(id);
+      localStorage.setItem("history", JSON.stringify(historyTools));
+
+      const link = card.dataset.link;
+      if (link) {
+        openTool(link);
+      }
+    });
+
+
+    if (star) {
+      star.addEventListener("click", e => {
+        e.stopPropagation();
+        if (favorites.includes(id)) {
+          favorites = favorites.filter(f => f !== id);
+          star.classList.remove("active");
+        } else {
+          favorites.push(id);
+          star.classList.add("active");
+        }
+        localStorage.setItem("favorites", JSON.stringify(favorites));
+        renderFavTools();
+      });
+    }
+  });
+}
+
+function renderFavTools() {
+  const favGrid = document.getElementById("favGrid");
+  favGrid.innerHTML = "";
+  favorites.forEach(id => {
+    const source = allCards.find(c => c.dataset.id === id);
+    if (source) {
+      const clone = source.cloneNode(true);
+      clone.classList.add("fav-card");
+      const starEl = clone.querySelector(".star");
+      if (starEl) starEl.remove();
+      favGrid.appendChild(clone);
+      clone.addEventListener("click", () => {
+        const link = source.dataset.link;
+        if (link) {
+          openTool(link);
+        }
+      });
+    }
+  });
+}
+
+document.querySelectorAll(".filter-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    const filter = btn.dataset.filter;
+    const searchTerm = document.getElementById("searchInput").value;
+    renderTools(filter, searchTerm);
+  });
+});
+
+document.getElementById("searchInput").addEventListener("input", e => {
+  const activeFilter = document.querySelector(".filter-btn.active").dataset.filter;
+  renderTools(activeFilter, e.target.value);
+});
+
+renderTools();
+
+function toggleMode() {
+  document.body.classList.toggle("dark");
+  document.getElementById("modeBtn").textContent = document.body.classList.contains("dark") ? "☀️" : "🌙";
+}
+
+function showToast(msg) {
+  const toast = document.getElementById("toast");
+  toast.textContent = msg;
+  toast.classList.add("visible");
+  setTimeout(() => toast.classList.remove("visible"), 3000);
+}
+
+document.querySelectorAll("#sideviewPanel .seg-btn[data-cat]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll("#sideviewPanel .seg-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    const cat = btn.dataset.cat;
+    if (cat === "tutorial") {
+      window.open("https://usman-vip-toolkit.vercel.app/", "_blank");
+      return;
+    }
+
+    if (cat === "history") {
+      renderTools("all", "");
+      document.querySelectorAll("#toolGrid .card").forEach(c => c.remove());
+      if (historyTools.length === 0) {
+        document.getElementById("toolGrid").innerHTML = `<p style="grid-column:1/-1;text-align:center;color:var(--muted);padding:40px;font-size:14px;">No history yet</p>`;
+      } else {
+        historyTools.forEach(id => {
+          const source = allCards.find(c => c.dataset.id === id);
+          if (source) {
+            const clone = source.cloneNode(true);
+            document.getElementById("toolGrid").appendChild(clone);
+          }
+        });
+        attachCardEvents();
+      }
+    } else {
+      renderTools("all", "");
+    }
+  });
+});
+
+document.getElementById("clearHistoryBtn").addEventListener("click", () => {
+  historyTools = [];
+  localStorage.setItem("history", JSON.stringify(historyTools));
+  showToast("History Cleared ✅");
+});
+
+document.querySelector(".contact-btn")?.addEventListener("click", () => window.open("https://wa.me/+93776544491","_blank"));
+document.querySelector(".channel-btn")?.addEventListener("click", () => window.open("https://whatsapp.com/channel/0029Vb6SwB147XeCTHpikc0O","_blank"));
+
+const searchInput = document.getElementById("searchInput");
+const searchText = "Search Anything From Usman Tools";
+let index = 0;
+function typeSearchText(){
+  if(index <= searchText.length){
+    searchInput.setAttribute("placeholder", searchText.slice(0, index));
+    index++;
+    setTimeout(typeSearchText, 150);
+  } else {
+    setTimeout(()=>{ index=0; typeSearchText(); }, 2000);
+  }
+}
+typeSearchText();
+
+const AUDIO_STORAGE_KEY = "usman_audio";
+
+// Restore previously selected audio (if any)
+(function restoreAudioSelection() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(AUDIO_STORAGE_KEY) || "null");
+    if (!saved || !saved.src) return;
+
+    const player = document.getElementById("audioPlayer");
+    player.src = saved.src;
+
+    // Highlight the saved track in the list
+    document.querySelectorAll("#audioPanel .audio-item").forEach(item => {
+      if (item.dataset.src === saved.src) {
+        item.classList.add("playing");
+      }
+    });
+
+    // Try to auto-play only if it was playing last time
+    if (saved.playing) {
+      player.play().catch(() => {
+        // Autoplay might be blocked; just keep it selected
+      });
+    }
+  } catch (e) {
+    console.error("Failed to restore audio selection", e);
+  }
+})();
+
+document.querySelectorAll("#audioPanel .audio-item").forEach(item => {
+  item.addEventListener("click", () => {
+    const src = item.dataset.src;
+    const title = item.querySelector("span:nth-child(2)").textContent;
+    const player = document.getElementById("audioPlayer");
+
+    if (player.src === src && !player.paused) {
+      player.pause();
+      document.querySelectorAll(".audio-item").forEach(i => i.classList.remove("playing"));
+      localStorage.setItem(AUDIO_STORAGE_KEY, JSON.stringify({ src, title, playing: false }));
+      showToast("Music Paused ⏸");
+    } else {
+      player.src = src;
+      player.play().catch(() => showToast("Play blocked. Tap again!"));
+      document.querySelectorAll(".audio-item").forEach(i => i.classList.remove("playing"));
+      item.classList.add("playing");
+      localStorage.setItem(AUDIO_STORAGE_KEY, JSON.stringify({ src, title, playing: true }));
+      showToast(`Now Playing: ${title} 🎶`);
+    }
+  });
+});
+
+// Heart animation
+setInterval(() => {
+  const heart = document.querySelector(".sticky-footer .heart");
+  if (heart) {
+    heart.textContent = heart.textContent === "💛" ? "🖤" : "💛";
+  }
+}, 1000);
+
+
+
+// Particle Effects
+const particlesContainer = document.getElementById("particles-container");
+let currentEffect = null;
+
+function createParticle(type) {
+  const particle = document.createElement("div");
+  particle.style.position = "absolute";
+  particle.style.left = Math.random() * 100 + "vw";
+  particle.style.top = "-20px";
+  particle.style.fontSize = (Math.random() * 8 + 12) + "px";
+  particle.style.opacity = Math.random() * 0.6 + 0.4;
+  particle.style.pointerEvents = "none";
+  particle.style.animation = "fall " + (Math.random() * 5 + 5) + "s linear forwards";
+
+  if (type === "snow") particle.textContent = "❄️";
+  else if (type === "stars") particle.textContent = "✶";
+  else if (type === "sakura") particle.textContent = "🌸";
+  else if (type === "confetti") {
+    particle.style.width = "8px";
+    particle.style.height = "8px";
+    particle.style.background = ["#f5c518", "#ff004c", "#00ff85", "#00c8ff"][Math.floor(Math.random() * 4)];
+    particle.style.borderRadius = Math.random() > 0.5 ? "50%" : "0";
+    particle.textContent = "";
+  }
+
+  particlesContainer.appendChild(particle);
+
+  setTimeout(() => particle.remove(), 10000);
+}
+
+function startEffect(type) {
+  stopEffect();
+  currentEffect = setInterval(() => {
+    for (let i = 0; i < 3; i++) {
+      createParticle(type);
+    }
+  }, 700);
+}
+
+function stopEffect() {
+  if (currentEffect) clearInterval(currentEffect);
+  currentEffect = null;
+  particlesContainer.innerHTML = "";
+}
+
+const style = document.createElement('style');
+style.textContent = `
+@keyframes fall {
+  to {
+    transform: translateY(100vh);
+  }
+}
+`;
+document.head.appendChild(style);
+
+const EFFECT_STORAGE_KEY = "usman_effect";
+
+// Restore previously selected particle effect
+(function restoreEffect() {
+  const savedEffect = localStorage.getItem(EFFECT_STORAGE_KEY);
+  if (!savedEffect || savedEffect === "off") return;
+
+  startEffect(savedEffect);
+  document.querySelectorAll("#effectsPanel .effect-btn").forEach(btn => {
+    if (btn.dataset.effect === savedEffect) {
+      btn.classList.add("active");
+    } else {
+      btn.classList.remove("active");
+    }
+  });
+})();
+
+document.querySelectorAll("#effectsPanel .effect-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll("#effectsPanel .effect-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    const effect = btn.dataset.effect;
+    if (effect === "off") {
+      stopEffect();
+    } else {
+      startEffect(effect);
+    }
+    localStorage.setItem(EFFECT_STORAGE_KEY, effect);
+  });
+});
+
+</script>
+</body>
+</html>
